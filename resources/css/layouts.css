@@ -1,0 +1,411 @@
+/* 
+    Document   : layouts
+    Created on : 13-Feb-2013, 22:00:48
+    Author     : Marcin_2
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+body { 
+    margin: 0px;
+    padding: 0px;
+}
+.aboveTable {
+    width: 620px;
+    height: 150px;
+    border: thin solid black;
+    padding: 10px;
+}
+
+.horizontalCenter {
+
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.tableContainer {
+  position: relative;
+      width: 630px;
+    height: 480px;
+  
+	border: thin solid black;
+    padding: 5px;
+		background-attachment:fixed;
+		
+	
+	 
+}
+
+.table {
+    width: 630px;
+    height: 480px;
+    background-color: #003832;
+	background-image: url('../resources/images/backgrounds/bjtable.jpg');
+	background-repeat:no-repeat;
+	background-position:top right;
+	position: relative;
+	
+	
+}
+
+.playerSideContainer {
+    position: absolute;
+    width: 626px;
+    height: 196px;
+	left: 2px;
+	bottom: 2px;
+	/*background: yellow;*/
+}
+.playerCardsContainer {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 327px;
+  height: 196px;
+  /*background: green;*/
+}
+.playerScore{
+    width: auto; /* standard card size 57 x 89 mm => 57 x 9 + 8 x 4 = 545 */
+    height: 25px; /* 89 px + 2 x 4 = 97 */
+    position: absolute;
+    left: 25px;
+    bottom: 180px;
+    padding: 0px;
+    margin: 0px;
+}
+.playerc0Container {
+    width: 84px;
+    height: 104px;
+    left: 2px;
+    bottom: 2px;
+    position: absolute;
+}
+.playerc1Container {
+    width: 84px;
+    height: 104px;
+    left: 27px;
+    top: -12px;
+    position: relative;
+}
+.playerCard {
+	position: absolute;
+    width: 84px;
+    height: 104px;
+	bottom:0px;
+	left:0px;
+}
+.dealerSideContainer {
+    position: absolute;
+    width: 626px;
+    height: 278px;
+    top: 2px;
+	left:2px;
+	/*background: red;*/
+}
+.dealerCardsContainer {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 327px;
+  height: 196px;
+  /*background: green;*/
+}
+.gameMessageContainer{
+  position: absolute;
+  top: 220px;
+  right: 80px;
+  width: 200px;
+  height: 45px;
+}
+.houseRulesContainer {
+  position: absolute;
+  left: 2px;
+  top: 198px;
+  width: 323px;
+  height: 78px;
+  /*background: #CCCCFF;*/
+}
+.title1{
+  text-align:center;
+  font: bold 24px/1.2 'Times New Roman', Times, Serif;
+  color: #ff0000;
+  background: -webkit-linear-gradient(#ff0000, #aa0000);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.title2{
+  border-top: thin solid #aaaaaa;
+  border-bottom: thin solid #aaaaaa;
+  text-align:center;
+  font: bold 20px/1.2 'Times New Roman', Times, Serif;
+  color: #aaaaaa;
+  background: -webkit-linear-gradient(#ffffff, #999999);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.title3{
+  text-align:center;
+  font: bold 12px/1.2 Arial, Verdana, Sans-serif;
+  color: #aaaaaa;
+  background: -webkit-linear-gradient(#ffffff, #999999);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.text1{
+  text-align:center;
+  height:30px;
+  font: bold italic 20px/1.2 'Times New Roman', Times, Serif;
+  color: #ffe524;
+  background: -webkit-linear-gradient(#ffaa00, #aa9900);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.text2{
+
+  font: bold 12px/1.2 Arial, Verdana, Sans-serif;
+  color: #222222;
+}
+.message1{
+  padding: 5px;
+  border: 2px solid #aaaaaa;
+  background: #999999;
+  background: -webkit-linear-gradient(#999999, #666666);
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+  font: bold 12px/1 Helvetica, Alial, Sans-serif;
+  color: #003832;
+  visibility: hidden;
+}
+.dealerScore{
+    width: auto;
+    height: 25px; 
+    position: absolute;
+    left: 25px;
+    top: 180px;
+    padding: 0px;
+    margin: 0px;
+}
+.dealerc0Container {
+    width: 74px;
+    height: 92px;
+    left: 2px;
+    top: 2px;
+    position: absolute;
+	/*background: #000000;*/
+}
+.dealerc1Container {
+    width: 74px;
+    height: 92px;
+    left: 27px;
+    top: 12px;
+    position: relative;
+	/*background: #000000;*/
+}
+.dealerCard {
+	position: absolute;
+    width: 74px;
+    height: 92px;
+	top:0px;
+	left:0px;
+}
+.gameContainer {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 149px;
+  height: 196px;
+  /*background: #009966;*/
+ 
+}
+.chipsContainer{
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 145px;
+  height: 150px;
+  /* background: #669999; */
+}
+.currentBetOff{
+  display: block;
+  margin-left:auto;
+  margin-right:auto;
+  margin-bottom: 20px;
+  width: 70px;
+  height: 30px;
+  text-align: center;
+  color: #ffe524;
+  font: bold 14px/2 Helvetica, Arial, sans-serif;
+  border: 3px double #ffe524;
+  background: #003832;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+  background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+  background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+  background-image: -ms-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+  background-image: linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+  cursor: pointer;
+  cursor: hand;
+}
+.currentBetOn{
+  display: block;
+  margin-left:auto;
+  margin-right:auto;
+  margin-bottom: 20px;
+  width: 70px;
+  height: 30px;
+  text-align: center;
+  font: bold 14px/2 Helvetica, Arial, sans-serif;
+  border: 3px double #003832;  /*#ffe524;*/
+  background: #ffe524;
+  color: #003832;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+  background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+  background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+  background-image: -ms-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+  background-image: linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+  cursor: pointer;
+  cursor: hand;
+}
+.rowOfChips{
+  position: relative;
+  height: 40px;
+  width: 145px;
+}
+.chip1Container{
+  position: absolute;
+  left: 2px;
+  top: 0px;
+}
+.chip2Container{
+  position: absolute;
+  left: 38px;
+  top: 0px;
+}
+.chip3Container{
+  position: absolute;
+  left: 74px;
+  top: 0px;
+}
+.chip4Container{
+  position: absolute;
+  left: 110px;
+  top: 0px;
+}
+.chipOff {
+  /*display:inline;*/
+  width: 25px;
+  height: 25px;
+  font: 14px/1.7 Helvetica, Arial, sans-serif;
+  border: 3px double #ffe524;
+  background: #003832;
+  color: #ffe524;
+  -webkit-border-radius: 16px;
+  -moz-border-radius: 16px;
+  border-radius: 16px;
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+  background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+  background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+  background-image: -ms-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+  background-image: linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+  text-align:center;
+}
+.chipOn {
+  width: 25px;
+  height: 25px;
+  font: bold 14px/1.7 Helvetica, Arial, sans-serif;
+  border: 3px double #003832;  /*#ffe524;*/
+  background: #ffe524;
+  color: #003832;
+  -webkit-border-radius: 16px;
+  -moz-border-radius: 16px;
+  border-radius: 16px;
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+  background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+  background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+  background-image: -ms-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+  background-image: linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+  text-align:center;
+  cursor: pointer;
+  cursor: hand; 
+}
+.currentChips{
+  position: relative;
+  display: block;
+  margin-left:auto;
+  margin-right:auto;
+  width: 70px;
+  text-align: center;
+  color: #ffe524;
+  font: bold 22px/1.7 Helvetica, Arial, sans-serif;
+}
+
+.playContainer{
+  display:none;
+  position:absolute;
+  left: 2px;
+  bottom: 2px;
+  /*background: #339999;*/
+  height: 42px;
+
+}
+.dealContainer{
+  
+  margin-left: 10px;
+  display:none;
+  position: relative;
+    cursor: pointer;
+  cursor: hand;
+}
+.hitContainer{
+  display:none;
+  margin-left: 10px;
+  position: relative;
+  cursor: pointer;
+  cursor: hand;
+}
+.standContainer{
+  display:none;
+  margin-left: 10px;
+  position: relative;
+  cursor: pointer;
+  cursor: hand;
+}
+.infoContainer {
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  width: 144px;
+  height: 196px;
+  background-image: url('../resources/images/backgrounds/info_background_144_196.png');
+}
+
+.infoContent{
+	font: bold 12px/1.5 Verdana, Arial, Sans-Serif;
+	color:  #222222;
+	position: relative;
+	padding: 10px;
+	margin: auto;
+}
+
+
+
+.cardSlide {
+  animation-duration: 1s;
+  animation-name: slidein;
+}
+ 
+@keyframes slidein {
+from {
+    margin-left: 100%;
+  }
+ 
+  to {
+    margin-left: 0%;
+  }
+}

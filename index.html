@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>JS Games</title>
+    <link href="resources/css/layouts.css" rel="stylesheet" type="text/css">
+    <link href="resources/css/colours.css" rel="stylesheet" type="text/css">
+    <script src="javascript/blackjack.js"></script>
+  </head>
+  <body onload="init();">
+
+<div class="aboveTable horizontalCenter">
+    <h1>Blackjack Game Test Page</h1>
+</div>
+
+<div class ="tableContainer horizontalCenter">
+<div class ="table">
+    <div class="dealerSideContainer">
+        <div class="dealerCardsContainer">
+            <div class="dealerScore" id="dealerScore"></div>
+            <div class="dealerc0Container" id="dealerc0Container"></div>
+        </div>
+        <div class="gameMessageContainer">
+            <div class="message1" id="gameMessage"></div>
+        </div>
+        <div class="houseRulesContainer">
+            <div class="title1">
+                BLACKJACK PAYS 3 TO 2
+            </div>
+        <div class="title2">
+            INSURANCE RULE GOES HERE
+        </div>
+            <div class="text1">
+                Dealer must stand on all 17's
+            </div>
+        </div>
+    </div>
+    <div class="playerSideContainer">
+        <div class="playerCardsContainer">
+            <div class="playerc0Container" id="hand0"><div id="currentBet0"></div></div>
+            <div class="playerScore" id="playerScore"></div>
+        </div>
+    
+        <div class="gameContainer" id="gameContainer">
+            <div class = "chipsContainer" id="chipsContainer">
+                
+                <div class = "rowOfChips">
+                    <div class="chip1Container chipOn" alt="Bet Five"> 5</div>
+                    <div class="chip2Container chipOn" alt="Bet Ten">10</div>
+                    <div class="chip3Container chipOn" alt="Bet Twenty Five">25</div>
+                    <div class="chip4Container chipOn" alt="Bet Fifty">50</div>
+                </div>
+                <div class = "currentBetOff" alt="Clear Bet">Clear Bet</div>
+                <div class = "currentChips" id="currentChips">100</div>
+            </div>
+            <div class = "playContainer" id="playPanel">
+                <div class="dealContainer" id="deal">deal</div>
+                <div class="hitContainer" id="hit">draw</div>
+                <div class="standContainer" id="stand">stand</div>
+            </div>
+        </div>
+        
+    </div>
+    <div class="infoContainer">
+            <div class="infoContent">
+            <div class="title3">Statistics</div>
+                <div class="text2" id="gamesPlayed">Games played - 0</div>
+                <div class="text2" id="wins">Games won - 0</div>
+                <div class="text2" id="blackjacks">Blackjacks - 0</div>
+                <div class="text2" id="cardsInShoe">Cards in Shoe - 52</div>
+            </div>
+        </div>
+</div>
+</div>
+</body>
+</html>
