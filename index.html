@@ -36,11 +36,12 @@
         </div>
     </div>
     <div class="playerSideContainer">
-        <div class="playerCardsContainer">
-            <div class="playerc0Container" id="hand0"><div id="currentBet0"></div></div>
-            <div class="playerScore" id="playerScore"></div>
+        <div class="playerHands" id="playerHands">
+            <div class="player0Hand" id="player0Hand"></div>
+            <!--div class="player1Hand"></div>
+            <div class="player2Hand"></div>
+            <div class="player3Hand"></div-->
         </div>
-    
         <div class="gameContainer" id="gameContainer">
             <div class = "chipsContainer" id="chipsContainer">
                 
@@ -54,9 +55,10 @@
                 <div class = "currentChips" id="currentChips">100</div>
             </div>
             <div class = "playContainer" id="playPanel">
-                <div class="dealContainer" id="deal">deal</div>
-                <div class="hitContainer" id="hit">draw</div>
-                <div class="standContainer" id="stand">stand</div>
+                <div class="dealContainer" id="deal" alt="Deal">deal</div>
+                <div class="hitContainer" id="hit" alt="Draw">draw</div>
+                <div class="standContainer" id="stand" alt="Stand">stand</div>
+
             </div>
         </div>
         
@@ -68,9 +70,11 @@
                 <div class="text2" id="wins">Games won - 0</div>
                 <div class="text2" id="blackjacks">Blackjacks - 0</div>
                 <div class="text2" id="cardsInShoe">Cards in Shoe - 52</div>
+                <div class="standContainer" id="reset" alt="reset">reset</div>
             </div>
         </div>
 </div>
 </div>
+
 </body>
 </html>

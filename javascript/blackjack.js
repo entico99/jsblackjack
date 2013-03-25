@@ -29,12 +29,14 @@ MYAPP.namespace = function (ns_string) {  //Stefanov, Stoyan (2010-09-09). JavaS
 MYAPP.namespace('MYAPP.blackjack');
 MYAPP.blackjack = (function () {
     "use strict";
-    var mu              = MYAPP.utils, //for easier communitations with module @MYAPP.utils
-        gameOptions     = {            //default options, need to work on adding more stuff here
+    var //mu              = utils, //for easier communitations with module @MYAPP.utils
+        //ms              = MYAPP.screenOps,  //for easier access to screen operating module
+        gameOptions     = {        //default options, need to work on adding more stuff here
+            blackjackPayout     : 1.5,
             reshuffleThreshold  : 1,
             noOfSplits          : 1,
             noOfDecks           : 1,
-            dealerDrawsOnSoft16 : true,
+            dealerDrawsOnSoft17 : true,
             dealerDrawsOnAll16  : false,
             dealerPeeksOnA      : false,
             dealerPeeksOnAor10  : false,
@@ -52,18 +54,26 @@ MYAPP.blackjack = (function () {
         currentHand     = 0,
         shoe            = [],          //array of cards can contain multiple decks
         discards        = [],          //discarded cards pile
-        canDeal         = false,       //phase of the game
         splits          = 0,
         
-
         getNewShoe      = null,
+        deal            = null,
+        draw            = null,
+        bet             = null,
         //APIs
         initBlackjack   = null,        //init game
+        eventHandler    = null,
         betHandler      = null,        //event handler for user interaction
         playHandler     = null,
-        screenHandler   = null;        //screen handler for updationg screen
+        screenHandler   = null,        //screen handler for updationg screen
+        updateChildNode = null,
+        placeBet        = null,
+        checkBlackjack  = null,
+        checkWinner     = null,
+        checkHiddenCard = null;
 
-    getNewShoe = function (noOfDecks) {  //takes @number of decks returns and array with cards from 2 decks
+
+    getNewShoe = function () {  //takes @number of decks returns and array with cards from 2 decks
         var SUITS       = ["&spades;", "&hearts;", "&diams;", "&clubs;"], //constants
             RANKS       = [2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K", "A"],
 
@@ -85,7 +95,6 @@ MYAPP.blackjack = (function () {
                 }
             }
         }
-        console.log(newShoe);
         newShoe = MYAPP.utils.reshuffleArray(newShoe);
         return newShoe;
     };
@@ -105,11 +114,11 @@ MYAPP.blackjack = (function () {
         var i;
         hand.value = 0;  //reset hand value and number of aces
         hand.soft = 0;
-
+//console.log(hand.cards[0].rank);
         for (i = 0; i < hand.cards.length; i += 1) {  
-            if (card[i].visible) {
-                hand.value += card[i].value;  //add all visible cards in cards array
-                if (card[i].rank === "A") {  //add all aces valued 11 in property soft
+            if (hand.cards[i].visible) {
+                hand.value += hand.cards[i].value;  //add all visible cards in cards array
+                if (hand.cards[i].rank === "A") {  //add all aces valued 11 in property soft
                     hand.soft += 1;
                 }
             }
@@ -123,74 +132,92 @@ MYAPP.blackjack = (function () {
         return hand;
     };
 
-    function dealerPlay() {  //call this function like that while (dealerDraw) { dealer.hand.push(drawCard(deck)); }
-        hands.playerHands[currentHand].canDraw = false;
-        hands.playerHands[currentHand].canSplit = false;
-        hands.playerHands[currentHand].canDouble = false;
+    stand = function () {  //call this function like that while (dealerDraw) { dealer.hand.push(drawCard(deck)); }
+        
         hands.dealerHand.cards[0].visible = true;
-
         hands.dealerHand = updateHandValue(hands.dealerHand);
-        if (gameRules.dealerDrawsOnSoft16) {  //dealer draws on soft 16s and stands on all 17s
-            while (hands.dealerHand.value < 17 && hands.dealerHand.soft > 0) {
+        if (gameRules.dealerDrawsOnSoft17) {  //dealer draws on soft 17s
+            while (hands.dealerHand.value <= 17 && hands.dealerHand.soft > 0) {
                 hands.dealerHand = updateHandValue(draw(hands.dealerHand,true));
             }
         } else if (gameRules.dealerDrawsOnAll16) {  //dealer draws on all 16s and stands on all 17s
             while (hands.dealerHand.value < 17) {
                 hands.dealerHand = updateHandValue(draw(hands.dealerHand,true));
             }
-            
-        } else {};
-        getWinner(hand[currentHand]);
+        }
+        checkWinner();
     };
     
-    function getWinner(hand) {
+    checkWinner = function(hand) {
         if (hand.value > hands.dealerHand.value) {
             currentChips += hand.bet;                //TODO announce player winner
+            console.log("player won")
         } else if (hands.dealerHand.value > hand.value) {
             currentChips -= hand.bet;                //TODO announce dealer winner
+            console.log("dealer won")
         } else {
                                                      //TODO announce push
         }
 
         endPlay();
     };
+    checkHiddenCard = function () {
+        var card = hands.dealerHand.cards[0];
 
-    
-    function bet (hand, amount) {
-        if (!hand.canBet) { 
-            return null; 
+        card.visibility = true;
+        card.value = getCardValueBJ(card);
+        card.visibility = false;
+        return card.value;
+    }
+    checkBlackjack = function (hand) {
+        var dealerCard = hands.dealerHand.cards[1].value,
+            playerHandBlackjack = false,
+            dealerHandBlackjack = false;
+
+        if (hand.value === 21 && hand.cards.length === 2) {
+            playerHandBlackjack = true;
         }
-        else {
-            if (amount === 0) {
-                canDeal = false;
-                hand.bet = 0;
-                MYAPP.utils.removeListener(document.getElementById('playPanel'), "click", playHandler);
-            } else {
-                canDeal = true;
-                hand.bet += amount;
-                MYAPP.utils.addListener(document.getElementById('playPanel'), "click", playHandler);
+
+        if (checkHiddenCard() + dealerCard === 21 && hands.dealerHand.cards.length === 2) {
+            if (gameRules.dealerPeeksOnA && dealerCard === 11) {
+                dealerHandBlackjack = true;    
+            } else if (gameRules.dealerPeeksOnAor10 && (dealerCard === 11 || dealerCard === 10)) {
+                dealerHandBlackjack = true;    
             }
-            return hand;
         }
+
+        if (playerHandBlackjack && !dealerHandBlackjack) {
+            currentChips += hands.playerHands[currentHand].bet * gameOptions.blackjackPayout;  //TODO announce winner, end game
+            console.log("player BJ!")
+        } else if (!playerHandBlackjack && dealerHandBlackjack) {
+            currentChips -= hands.playerHands[currentHand].bet;                                //TODO announce winner, end game
+            console.log("dealer BJ!")
+        } else if (playerHandBlackjack & dealerHandBlackjack) {
+                                                                                               //TODO announce push
+        }
+
+    }
+
+    deal = function () {
+        var p1 = draw(true),
+            p2 = draw(true),
+            d1 = draw(false),
+            d2 = draw(true);
+        hands.playerHands[currentHand].cards = [p1, p2];
+        hands.dealerHand.cards = [d1, d2];
     };
-    function deal () {
-        hands.playerHands[currentHand] = draw(hands.playerHands[currentHand],true);
-        hands.dealerHand = draw(hands.dealerHand,false);
-        hands.playerHands[currentHand] = draw(hands.playerHands[currentHand],true);
-        hands.dealerHand = draw(hands.dealerHand,true);
+
+    draw = function (vis) {
+        var card = shoe.shift(); //shoe is always shuffled, takes first card object from shoe
+            card.visible = vis;
+            card.value = getCardValueBJ(card.rank);
+            return card;
     };
-    function draw (hand,vis) {
-        var card = null;
-        card = shoe.shift(); //shoe is always shuffled, takes first card object from shoe
-        card.visible = vis;
-//console.log("Card drawn is " + card.suit + card.rank + " and card value  is " + card.value + ", this card is visible " + card.visible);
-        hand = updateHandValue(hand.push(card));
-        screenHandler("cards");
-        return hand;
-    };
+
     function stand () {
         
     };
+
     function endPlay () {
         canBet = true;
         canDeal = false;
@@ -199,159 +226,97 @@ MYAPP.blackjack = (function () {
         canSplit = false;
         canDoubleDown = false;
     };
-    //  functions with public interfaces
-    betHandler = function (elem) {
-        var elem = elem || window.event,
-            src = elem.target || elem.srcElement;
-        switch(src.getAttribute("alt")) {
-        case "Bet Five":
-            hands.playerHands[currentHand] = bet(hands.playerHands[currentHand],5);
-            screenHandler("bet");
-            break;
-        case "Bet Ten":
-            hands.playerHands[currentHand] = bet(hands.playerHands[currentHand],10);
-            screenHandler("bet");
-            break;
-        case "Bet Twenty Five":
-            hands.playerHands[currentHand] = bet(hands.playerHands[currentHand],25);
-            screenHandler("bet");
-            break;
-        case "Bet Fifty":
-            hands.playerHands[currentHand] = bet(hands.playerHands[currentHand],50);
-            screenHandler("bet");
-            break;
-        case "Clear Bet":
-            hands.playerHands[currentHand] = bet(hands.playerHands[currentHand],0);
-            screenHandler("bet");
-            break;
-        default:
-            break;
+
+    placeBet = function (hand,amount) {    
+        if (amount === 0) {
+            hand.canDeal = false;
+            hand.bet = 0;
+        } else {
+            hand.canDeal = true;
+            hand.bet += amount;
         }
-    }
-    playHandler = function (elem) {
-        var elem = elem || window.event,
-            src = elem.target || elem.srcElement,
-            plHand = hands.playerHands[currentHand],
-            dlHand = hands.dealerHand;
+        screenHandler("bet", hands.playerHands[currentHand].bet);
+        return hand;
+    };
 
-        hands.playerHands[currentHand].canBet = false;
-        mu.removeListener(document.getElementById('rowOfChips'), "click", betHandler);
-        switch(src.getAttribute("alt")) {
+    //  functions with public interfaces
+    betHandler = function (newBet, callback) {  //in case I want to do something before placing a bet
+        var hand = hands.playerHands[currentHand];
+        if (!hand.canBet || hand.canDraw || hand.canSplit || hand.canDouble) {
+            console.log("can not bet now");
+            return null; 
+        } else {
+            callback(hand,newBet);    
+        };
+    };
+    
+    
+    playHandler = function (playEvent) {
+        var playerHand = hands.playerHands[currentHand];
+        switch (playEvent) {
         case "deal":
-            if (!hands.playerHands[currentHand].canDeal) {
-                break;
-            } else {
-                console.log("Deal!");
-                canDeal = false;
+            if (playerHand.canDeal) {
                 deal();
-                setTimeOut ((function () {
-                    if (updateHandValue(hand[currentHand]).value === 21) {
-
-                        dealerPlay();//dealer play
-                    } else {
-                        //display draw, split, dd buttons
-                        hands.playerHands[currentHand].canDraw = true;
-                        hands.playerHands[currentHand].canSplit = true;
-                        hands.playerHands[currentHand].canDouble = true;
-                    }
-                }()),1000);
-            };  
+                playerHand.canDeal = false;
+                updateHandValue(hands.playerHands[currentHand]);
+                updateHandValue(hands.dealerHand);
+                checkBlackjack(hands.playerHands[currentHand]);
+            }
             break;
         case "draw":
-            if (!hands.playerHands[currentHand].canDraw) {
-                break;
-            } else {
-                canDraw = false;
-                setTimeOut((function () {
-                    if(updateHandValue(draw(plHand,true)).value > 21) {
-                        dealerPlay();
-                    } else {
-                        candDraw = true;
-                    }
-                }()),1000);
-                // screenHandler("div", "playercXcontainer");    
-            };
-            break;
-        case "doubleDown":
-            if (!hands.playerHands[currentHand].canDouble) {
-                break;
-            } else {
-                canDouble = false;
-                hands.playerHands[currentHand] = bet(hands.playerHands[currentHand],hands.playerHands[currentHand].bet)
-                // screenHandler("div", "playPanel")
-            }
-            break;
-        case "split":
-            if (!hands.playerHands[currentHand].canSplit) {
-                break;
-            } else {
-                canSplit = false;
-                // do some splitting here
-            }
+            hand.playerHands[currentHand] = draw(hand.playerHands[currentHand], true);
+            updateHandValue(hands.playerHands[currentHand]);
             break;
         case "stand":
-
+            stand();
         }
-     
-    };
-
-    function updateChildNode (oldChild, newChild, parent) {
-        if (oldChild != null) {
-            oldChild.parentNode.replaceChild(newChild, oldChild);
-        } else {
-            parent.appendChild(newChild);
-        }
-    };
-
-    screenHandler = function (screenElem) {
-        var i = null,
-            j = null, 
-            betAmount = null,
-            cardsInHand = null,
-            oldNode = null, 
-            newNode = null,
-            nodeContent = null,
-            parent = null;
-        switch (screenElem) {
-        case "bet":
-
-            betAmount = hands.playerHands[currentHand].bet;
-            nodeContent = document.createTextNode(betAmount);
-            newNode = document.createElement("div");
-            newNode.appendChild(nodeContent);
-            newNode.setAttribute("id", "currentBet" + currentHand);
-            if(betAmount === 0) {
-                newNode.setAttribute("class", "currentBetOff");
-            } else {
-                newNode.setAttribute("class", "currentBetOn");
-            }
-
-            for (i = splits; i >= 0; i -= 1) {  //using global variable splits to iterate through all hands
-                oldNode = document.getElementById("currentBet" + i);
-                if (i === currentHand) {  //if current hand, update it
-                    updateChildNode(oldNode, newNode, document.getElementById("hand" + i));    
-                } else {  //if not current hand switch off bet
-                    oldNode.setAttribute("class", "currentBetOff");
-                }
-            }
-        case "cards":
-            //player cards, updating all hands
-            
-            for (i = splits; i >= 0; i -= 1 ) {
-                cardsInHand = hands.playerHands[i].cards.length;
-                for (j = 0; j < cardsInHand; j += 1) {
-                    oldNode = document.getElementById("hand" + i + "card" + j);
-                    nodeContent = hands.playerHands[i].cards[j].rank + " of " + hands.playerHands[i].cards[j].suit;
-                    newNode = document.createElement("div");
-                    newNode.appendChild(nodeContent);
-                    newNode.setAttribute("class", "card" + j + "of" + cardsInHand);
-
-                }
-            }
+    }
+    eventHandler = function (elem) {
+        var elem = elem || window.event,
+            src = elem.target || elem.srcElement,
+            bet = null;
+        switch (src.getAttribute("alt")) {
+        case "Bet Five":
+            betHandler(5, placeBet);
+            break;
+        case "Bet Ten":
+            betHandler(10, placeBet);
+            break;
+        case "Bet Twenty Five":
+            betHandler(25, placeBet);
+            break;
+        case "Bet Fifty":
+            betHandler(50, placeBet);
+            break;
+        case "Clear Bet":
+            betHandler(0, placeBet);
+            break; 
+        case "Deal":
+            playHandler("deal");
+            break; 
+        case "Draw":
+            playHandler("draw");
+            break; 
+        case "Stand":
+            console.log("stand");
+            break; 
+        case "Split":
+            console.log("split");
+            break; 
+        case "Double Down":
+            console.log("doubleDown");
+            break; 
+        case "reset":
+            initBlackjack();
             break;
         default:
-            break;
+            break; 
+
         }
+    };
+
+
+    
         /*var elemContent = document.createTextNode(domElementContent),
             elem = document.createElement(domElementType);
         elem.setAttribute("class", domElementClass);
@@ -365,7 +330,6 @@ MYAPP.blackjack = (function () {
         }*/
         
         //do some screen magic here
-    };
 
     initBlackjack = function () {
 
@@ -374,35 +338,63 @@ MYAPP.blackjack = (function () {
             cards: [],
             value: 0,
             soft: 0,
-            canBet: true,
+            canDeal: true,
+            /*canBet: true,
+
             canDraw: false,
             canSplit: false,
-            canDouble: false,
+            canDouble: false,*/
             player: "player"
         };
         hands.dealerHand = {
             cards: [],
             value: 0,
-            soft: 0
+            soft: 0,
+            player: "dealer"
         };
         shoe = getNewShoe();
-        screenHandler("bet");
     };
     return {
         initBlackjack: initBlackjack,
-        betHandler: betHandler,
+        eventHandler: eventHandler,
         playHandler: playHandler
     };
 
 }());
+MYAPP.namespace('MYAPP.screenOps')
+MYAPP.screenOps = (function () {
+    "use strict";
+    var updateChildNode      = null,
+        prepareNode          = null,
+ 
 
+    updateChildNode = function (oldChild, newChild, parent) {
+        var parentElem = document.getElementById(parent);
+        if (oldChild != null) {
+            oldChild.parentNode.replaceChild(newChild, oldChild);
+        } else {
+            parentElem.appendChild(newChild);
+        }
+    };
+    prepareNode = function (elem) {
+        var 
+            newNode = document.createElement(elem.elemType);
+        newNode.setAttribute("id", elem.elemID);
+        newNode.setAttribute("class", elem.elemClass);
+        newNode.appendChild(elem.elemContent);
+        updateChildNode(document.getElementById(elem.elemID), newNode, elem.elemParentID);
+    };
+    
+    return {
+        prepareNode: prepareNode
+    };
+}());
 MYAPP.namespace('MYAPP.utils');
 MYAPP.utils = (function () {
     "use strict";
     var addListener = null,
         removeListener = null,
-        reshuffleArray = null,
-        eventHandler = null;
+        reshuffleArray = null;
  
     if (window.addEventListener) {
         addListener = function (el, type, fn) {
@@ -427,22 +419,19 @@ MYAPP.utils = (function () {
         };
     }
     reshuffleArray = function (arr) {
-        console.log("Array shuffling called!, array to be reshuffled is " + arr);
         var i,
             arrLength = arr.length,
             reshuffledArr = [];
         for (i = arrLength; i > 0; i -= 1) {
             reshuffledArr[arrLength - i] = arr.splice(Math.floor(Math.random() * i), 1)[0];  //my own version of Fisher-Yates shuffling algorythm.
         }
-        console.log("Reshuffled array is " + reshuffledArr);
         return reshuffledArr;
     };
 
     return {
         addListener: addListener, //addListener(element, event type, function to be executed)
         removeListener: removeListener, //removeListener(element, event type, function to be executed)
-        reshuffleArray: reshuffleArray,
-        eventHandler: eventHandler
+        reshuffleArray: reshuffleArray
     };
 }());
 
@@ -452,9 +441,44 @@ function init (){  //initialising function to set up the game
         mb = MYAPP.blackjack;    
     
     mb.initBlackjack();
-    mu.addListener(document.getElementById('chipsContainer'), "click", mb.betHandler);
+    mu.addListener(document, "click", mb.eventHandler);
 
 };
 
 // TO DO
-// add message box that player can not deal
+// think about function deal, there are couple of options
+// 1) write function drawHandler which will callback draw function and pass it screenHandler as an argument
+// 2) deal will call playHandler with argument draw and play Handler will call draw with callback screenHandler
+//    this option will require another argument which hands is being drawn, for playHandler, it must interpret hand and call draw on correct hand. 
+
+/*screenHandler = function (elem, elemCont) {  // this method holds screen elements definitions, 
+                                                 //when called it picks up definition, 
+                                                 //loads it to variable screenElement and calls 
+                                                 //DOM node creator function for element to be placed on the page
+        var screenElement,
+            BET = {
+                elemType: "div",
+                elemParentID: "player" + currentHand + "Hand",
+                elemID: "player" + currentHand + "bet",
+                elemClass: "player" + currentHand + "bet",
+                elemContent: document.createTextNode(elemCont)
+            },
+            CARD = {
+                elemType: "div",
+                elemParentID: elemCont.player + (elemCont.cards.length - 1) + "card",
+                elemID: elemCont.player + elemCont.cards.length + card,
+                elemClass: elemCont.player + elemCont.cards.length + card,
+                elemContent: elemCont.cards[elemCont.cards.length - 1].rank + elemCont.cards[elemCont.cards.length - 1].suit
+            }
+
+        switch (elem) {
+        case "bet":
+            screenElement = BET;
+            break;
+        case "draw":
+            screenElement = CARD;
+        default:
+            break;
+        }
+        MYAPP.screenOps.prepareNode(screenElement);
+    }; */

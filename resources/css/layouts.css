@@ -37,9 +37,9 @@ body {
 }
 
 .table {
-    width: 630px;
-    height: 480px;
-    background-color: #003832;
+  width: 630px;
+  height: 480px;
+  background-color: #003832;
 	background-image: url('../resources/images/backgrounds/bjtable.jpg');
 	background-repeat:no-repeat;
 	background-position:top right;
@@ -56,13 +56,13 @@ body {
 	bottom: 2px;
 	/*background: yellow;*/
 }
-.playerCardsContainer {
+.playerHands {
   position: absolute;
   bottom: 0px;
   left: 0px;
-  width: 327px;
+  width: 440px;
   height: 196px;
-  /*background: green;*/
+  background: green;
 }
 .playerScore{
     width: auto; /* standard card size 57 x 89 mm => 57 x 9 + 8 x 4 = 545 */
@@ -73,19 +73,15 @@ body {
     padding: 0px;
     margin: 0px;
 }
-.playerc0Container {
-    width: 84px;
-    height: 104px;
-    left: 2px;
-    bottom: 2px;
+.player0Hand {
+    width: 110px;
+    height: 196px;
+    left: 150px;
+    bottom: 0px;
     position: absolute;
+    background-color: #333333;
 }
-.playerc1Container {
-    width: 84px;
-    height: 104px;
-    left: 27px;
-    top: -12px;
-    position: relative;
+
 }
 .playerCard {
 	position: absolute;
@@ -231,16 +227,16 @@ body {
   margin-left:auto;
   margin-right:auto;
   margin-bottom: 20px;
-  width: 70px;
-  height: 30px;
+  width: 145px;
+  height: 25px;
   text-align: center;
   color: #ffe524;
   font: bold 14px/2 Helvetica, Arial, sans-serif;
   border: 3px double #ffe524;
   background: #003832;
-  -webkit-border-radius: 8px;
-  -moz-border-radius: 8px;
-  border-radius: 8px;
+  -webkit-border-radius: 16px;
+  -moz-border-radius: 16px;
+  border-radius: 16px;
   background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
   background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
   background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
@@ -261,9 +257,9 @@ body {
   border: 3px double #003832;  /*#ffe524;*/
   background: #ffe524;
   color: #003832;
-  -webkit-border-radius: 8px;
-  -moz-border-radius: 8px;
-  border-radius: 8px;
+  -webkit-border-radius: 16px;
+  -moz-border-radius: 16px;
+  border-radius: 16px;
   background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
   background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
   background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
@@ -346,7 +342,6 @@ body {
 }
 
 .playContainer{
-  display:none;
   position:absolute;
   left: 2px;
   bottom: 2px;
@@ -357,20 +352,20 @@ body {
 .dealContainer{
   
   margin-left: 10px;
-  display:none;
+  display:inline;
   position: relative;
     cursor: pointer;
   cursor: hand;
 }
 .hitContainer{
-  display:none;
+  display:inline;
   margin-left: 10px;
   position: relative;
   cursor: pointer;
   cursor: hand;
 }
 .standContainer{
-  display:none;
+  display:inline;
   margin-left: 10px;
   position: relative;
   cursor: pointer;
